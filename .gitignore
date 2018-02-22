@@ -1,0 +1,6 @@
+# .gitignore
+
+*.zip
+.idea/
+.DS_Store
+*/virtualenv/
