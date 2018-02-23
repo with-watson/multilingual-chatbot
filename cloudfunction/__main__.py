@@ -23,9 +23,11 @@ def main( params ):
     # set up conversation
     try:
         convCreds = params['__bx_creds']['conversation']
-        conversation = ConversationV1( username=convCreds['username'],
-                                       password=convCreds['password'],
-                                       version='2018-02-16' )
+        conversation = ConversationV1(
+            username=convCreds['username'],
+            password=convCreds['password'],
+            version='2018-02-16'
+        )
     except:
         return {
             'message': 'Please bind your conversation service'
@@ -34,14 +36,60 @@ def main( params ):
     # set up translator
     try:
         ltCreds = params['__bx_creds']['language_translator']
-        translator = LanguageTranslatorV2( username=ltCreds['username'],
-                                           password=ltCreds['password'] )
+        translator = LanguageTranslatorV2(
+            username=ltCreds['username'],
+            password=ltCreds['password']
+        )
     except:
         return {
             'message': 'Please bind your language translator service'
         }
 
+    # check for empty or null string
+    try:
+        text = params['text']
+        if not text:
+            raise ValueError( 'Empty string passed!' )
+    except:
+        return {
+            'message': 'Don\'t be shy... say something! (pass a value to the \'text\' param)'
+        }
+
+    # get conversation context if available
+    try:
+        context = params['context']
+    except:
+        context = None
 
     # detect language
+    res = translator.identify( text )
+    if res['languages'][0]['confidence'] > 0.5:
+        language = res['languages'][0]['language']
+    else :
+        language = 'en'
 
-    return {'message': 'Hello world!!!!'}
+    # translate to english if needed
+    if language != 'en':
+        res = translator.translate( text, source=language, target='en' )
+        text = res['translations'][0]['translation']
+
+    # supply language as entity
+    text += ' (@language:{})'.format( language )
+
+    # hit conversation
+    res = conversation.message(
+        workspace_id=workspace,
+        input={'text': text},
+        context=context
+    )
+    newContext = res['context']
+    output = res['output']['text'][0]
+
+    # translate back to original language if needed
+    if language != 'en':
+        output = translator.translate( output, source='en', target=language )
+
+    return {
+        'message': output,
+        'context': newContext
+    }

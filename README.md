@@ -75,4 +75,9 @@ Verify that these services are available as parameters to your cloud function
 bx wsk action get translator parameters
 ```
 
-Send a sample request
+Send a few sample requests
+```
+bx wsk action invoke translator --result
+bx wsk action invoke translator --result --param text "hi there"
+bx wsk action invoke translator --result --param text "hola amigo"
+```
