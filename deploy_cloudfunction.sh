@@ -15,4 +15,4 @@ docker run --rm -v "$PWD:/tmp" openwhisk/python3action \
 zip -r "$packageName" virtualenv __main__.py
 
 # deploy as action
-bx wsk action update "$actionName" --kind python:3 "$packageName"
+bx wsk action update "$actionName" --kind python:3 "$packageName" --web true
