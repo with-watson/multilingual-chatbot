@@ -1,0 +1,31 @@
+name: watson
+channels:
+- defaults
+dependencies:
+- certifi=2016.2.28=py36_0
+- openssl=1.0.2l=0
+- pip=9.0.1=py36_1
+- python=3.6.2=0
+- readline=6.2=2
+- setuptools=36.4.0=py36_1
+- sqlite=3.13.0=0
+- tk=8.5.18=0
+- wheel=0.29.0=py36_0
+- xz=5.2.3=0
+- zlib=1.2.11=0
+- pip:
+  - asn1crypto==0.24.0
+  - cffi==1.11.4
+  - chardet==3.0.4
+  - cryptography==2.1.4
+  - idna==2.6
+  - pycparser==2.18
+  - pyopenssl==17.5.0
+  - pysolr==3.7.0
+  - python-dateutil==2.6.1
+  - requests==2.18.4
+  - six==1.11.0
+  - urllib3==1.22
+  - watson-developer-cloud==1.0.2
+prefix: /Users/devin/miniconda3/envs/watson
+
