@@ -11,7 +11,6 @@ For those not using a VM, you will need to install the dependencies below
 - Docker
 - Miniconda
 - Bluemix CLI w/ Cloud Functions plugin
-- (TODO versions)
 
 Create a python environment with conda:
 ```
@@ -19,12 +18,30 @@ conda env create -f environment.yml
 ```
 
 ## 1. Create Watson services
-TODO: what does this process look like? Pending info from conference team
-(bluemix accounts, service provisioning, etc.)
 
-...
+Sign up for an IBM Cloud account at https://console.bluemix.net/
 
-Make a note of `<conversation-workspace-id>`
+#### Watson Language Translator
+From the dashboard, click on **Create resource** and search for **Language Translator**.
+Provision an instance of Language Translator under the **Lite** plan
+
+#### Watson Assistant
+From the dashboard, click on **Create resource** and search for **Watson Assistant**.
+
+Provision an instance of Watson Assistant under the **Lite** plan.
+
+Click **Launch Tool**
+
+Create an instance by clicking on **Edit Sample** of the Car Dashboard workspace
+
+Make a note of `<conversation-workspace-id>`.
+This can be found under **Deployment > Credentials** of the individual workspace editor
+or by clicking on **View Details** from the home **Workspaces** page of the tool
+
+Once Watson has finished training, you may test out interacting with the assistant
+by clicking on **Try it** on the right side of the page.
+
+**Challenge:** try editing your workspace to customize the flows and responses.
 
 
 ## 2. Deploying your Cloud Function
@@ -80,4 +97,13 @@ Send a few sample requests
 bx wsk action invoke translator --result
 bx wsk action invoke translator --result --param text "hi there"
 bx wsk action invoke translator --result --param text "hola amigo"
+```
+
+## Run a full conversation (Upcoming feature)
+
+Go to https://console.bluemix.net/openwhisk to see your actions, and get api keys and namespace
+
+Run the program
+```
+python main.py --key <key> --namespace <namespace>
 ```
