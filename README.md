@@ -1,13 +1,11 @@
 # multilingual-chatbot
 **Think 2018 Lab Session:**
 
-Watson Conversation Service + Watson Language Translator to create a multilingual chatbot
+Watson Assistant + Watson Language Translator to create a multilingual chatbot
 
 ## Setup
-If you are at **Think 2018** and working from a Skytap VM, you can **skip this section.**
-Your working environment should be ready to go.
 
-For those not using a VM, you will need to install the dependencies below
+Verify that your system satisfies the dependencies below:
 - Docker
 - Miniconda
 - Bluemix CLI w/ Cloud Functions plugin
@@ -17,26 +15,34 @@ Create a python environment with conda:
 conda env create -f environment.yml
 ```
 
+Activate the environment
+```
+source activate watson
+```
+
 ## 1. Create Watson services
 
 Sign up for an IBM Cloud account at https://console.bluemix.net/
 
 #### Watson Language Translator
 From the dashboard, click on **Create resource** and search for **Language Translator**.
-Provision an instance of Language Translator under the **Lite** plan
+
+Provision an instance of Language Translator under the **Lite** plan.
+
+Create a set of credentials by clicking **Service credentials** > **New credential** > **Add**.
 
 #### Watson Assistant
 From the dashboard, click on **Create resource** and search for **Watson Assistant**.
 
 Provision an instance of Watson Assistant under the **Lite** plan.
 
-Click **Launch Tool**
+Click **Launch Tool**.
 
-Create an instance by clicking on **Edit Sample** of the Car Dashboard workspace
+Create an instance by clicking on **Edit Sample** of the Car Dashboard workspace.
 
 Make a note of `<conversation-workspace-id>`.
 This can be found under **Deployment > Credentials** of the individual workspace editor
-or by clicking on **View Details** from the home **Workspaces** page of the tool
+or by clicking on **View Details** from the home **Workspaces** page of the tool.
 
 Once Watson has finished training, you may test out interacting with the assistant
 by clicking on **Try it** on the right side of the page.
@@ -77,8 +83,8 @@ bx service list
 
 You should see output that looks something like this:
 ```
-<conversation-instance-name>        conversation                     free
-<translator-instance-name>             language_translator         free
+<conversation-instance-name>    conversation    free
+<translator-instance-name>    language_translator    free
 ```
 
 Attach these services to your cloud function
@@ -99,11 +105,15 @@ bx wsk action invoke translator --result --param text "hi there"
 bx wsk action invoke translator --result --param text "hola amigo"
 ```
 
-## Run a full conversation (Upcoming feature)
+## Run a full conversation
 
-Go to https://console.bluemix.net/openwhisk to see your actions, and get api keys and namespace
+Get the namespace for your deployed cloud function
+```
+bx wsk action get translator namespace
+```
 
-Run the program
+Run the program. Experiment with switching between languages mid-conversation
 ```
-python main.py --key <key> --namespace <namespace>
+python main.py --namespace <namespace>
 ```
+
