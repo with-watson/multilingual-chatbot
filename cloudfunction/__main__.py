@@ -8,6 +8,7 @@
 #
 #
 import sys
+import json
 from watson_developer_cloud import ConversationV1, LanguageTranslatorV2
 
 
@@ -57,7 +58,7 @@ def main( params ):
 
     # get conversation context if available
     try:
-        context = params['context']
+        context = json.loads( params['context'] )
     except:
         context = None
 
@@ -87,9 +88,9 @@ def main( params ):
 
     # translate back to original language if needed
     if language != 'en':
-        output = translator.translate( output, source='en', target=language )
+        output = translator.translate( output, source='en', target=language )['translations'][0]['translation']
 
     return {
         'message': output,
-        'context': newContext
+        'context': json.dumps( newContext )
     }

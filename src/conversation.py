@@ -1,34 +1,39 @@
-# wrapper around watson conversation
+# wrapper around cloud function for multilingual chatbot
 
 # lib
-from watson_developer_cloud import ConversationV1
-import json
 import requests
 
 
 class Conversation:
-    def __init__( self, key=None, namespace=None ):
+    def __init__( self, host=None, namespace=None, package=None, action=None ):
+        self.host = host
         self.namespace = namespace
-        self.key = key
+        self.package = package
+        self.action = action
         self.lastContext = {}
-        self.lastOutput = {}
-        self.base = 'https://openwhisk.ng.bluemix.net/api/v1'
+        self.lastOutput = 'Type here to begin the conversation:'
+        self.base = 'https://{}/api/v1/web'.format( self.host )
 
-        response = self.MakeRequest( '', {} )
-
-        self.lastContext = response['context']
-        self.lastOutput = response['output']['text'][0]
-
-    # hit conversation service and return response
-    def MakeRequest( self, msg, context ):
-        body = {'text': msg,
-                'context': context}
-        response = requests.post( '{}/namespaces/{}/actions/translator'.format( self.base, self.namespace ),
-                                  data=body )
+    # hit multilingual chatbot cloud function service and return response
+    def makeRequest( self, msg, context ):
+        body = {
+            'text': msg,
+            'context': context
+        }
+        response = requests.post(
+            '{}/{}/{}/{}.json'.format(
+                self.base,
+                self.namespace,
+                self.package,
+                self.action
+            ),
+            data=body
+        )
         return response.json()
 
-    def Converse( self ):
+    # print response and wait for user input
+    def converse( self ):
         msg = input( self.lastOutput + '\n' )
-        res = self.MakeRequest( msg, self.lastContext )
+        res = self.makeRequest( msg, self.lastContext )
         self.lastContext = res['context']
-        self.lastOutput = res['output']['text'][0]
+        self.lastOutput = res['message']
