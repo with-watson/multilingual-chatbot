@@ -84,13 +84,19 @@ def main( params ):
         context=context
     )
     newContext = res['context']
-    output = res['output']['text'][0]
+    output = res['output']
+    message = res['output']['text'][0]
+    intents = res['intents']
 
     # translate back to original language if needed
     if language != 'en':
-        output = translator.translate( output, source='en', target=language )['translations'][0]['translation']
+        message = translator.translate( message, source='en', target=language )['translations'][0]['translation']
+        output['text'][0] = message
 
     return {
-        'message': output,
-        'context': json.dumps( newContext )
+        'message': message,
+        'context': json.dumps( newContext ),
+        'output': json.dumps( output ),
+        'intents': json.dumps( intents ),
+        'language': language
     }
