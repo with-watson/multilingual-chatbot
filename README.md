@@ -6,11 +6,16 @@ Watson Assistant + Watson Language Translator to create a multilingual chatbot
 ## Setup
 
 Verify that your system satisfies the dependencies below:
-- Docker
-- Miniconda
-- Bluemix CLI w/ Cloud Functions plugin
+- [Docker][https://docs.docker.com/install/]
+- [Miniconda][https://conda.io/miniconda.html]
+- [IBM Cloud CLI][https://console.bluemix.net/docs/cli/reference/bluemix_cli/get_started.html#getting-started]
 
-Create a python environment with conda:
+Make sure the Cloud Functions plug-in is installed
+```
+bx plugin install cloud-functions
+```
+
+Create a python environment with conda
 ```
 conda env create -f environment.yml
 ```
@@ -117,3 +122,28 @@ Run the program. Experiment with switching between languages mid-conversation
 python main.py --namespace <namespace>
 ```
 
+## Integrate with an existing application
+
+Make a standard HTTP POST request to interact with the cloud function from any application
+```
+curl -X POST -H "Content-Type: application/json" -d '{"text": "bonjour"}' https://openwhisk.ng.bluemix.net/api/v1/web/<namespace>/default/translator.json
+```
+
+You will see a response like this
+```
+{
+  "context": "<content>",
+  "intents": "<intents>",
+  "language": "<language>",
+  "message": "<message>",
+  "output": "<output>"
+}
+```
+
+On subsequent requests, make sure to pass that context variable back in, to continue the conversation where you left off
+```
+curl -X POST -H "Content-Type: application/json" -d '{"text": "jouer de la musique", "context": "<context>"}' https://openwhisk.ng.bluemix.net/api/v1/web/<namespace>/default/translator.json
+```
+
+#### Check out this demo for a full example
+https://multilingual-chatbot-demo.mybluemix.net/
