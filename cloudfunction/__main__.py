@@ -10,6 +10,14 @@
 import sys
 import json
 from watson_developer_cloud import ConversationV1, LanguageTranslatorV2
+import time
+
+# consts
+BASE_LANGUAGE = 'en'
+LT_HEADERS = {
+    'X-Watson-Technology-Preview': '2017-07-01'
+}
+LT_THRESH = 0.5
 
 
 def main( params ):
@@ -49,12 +57,8 @@ def main( params ):
     # check for empty or null string
     try:
         text = params['text']
-        if not text:
-            raise ValueError( 'Empty string passed!' )
     except:
-        return {
-            'message': 'Don\'t be shy... say something! (pass a value to the \'text\' param)'
-        }
+        text = ''
 
     # get conversation context if available
     try:
@@ -63,15 +67,23 @@ def main( params ):
         context = None
 
     # detect language
-    res = translator.identify( text )
-    if res['languages'][0]['confidence'] > 0.5:
+    if text:
+        res = translator.identify( text, headers=LT_HEADERS )
+    else:
+        res = None
+    if res and res['languages'][0]['confidence'] > LT_THRESH:
         language = res['languages'][0]['language']
-    else :
-        language = 'en'
+    else:
+        language = BASE_LANGUAGE
 
-    # translate to english if needed
-    if language != 'en':
-        res = translator.translate( text, source=language, target='en' )
+    # translate to base language if needed
+    if language != BASE_LANGUAGE:
+        res = translator.translate(
+            text,
+            source=language,
+            target=BASE_LANGUAGE,
+            headers=LT_HEADERS
+        )
         text = res['translations'][0]['translation']
 
     # supply language as entity
@@ -89,8 +101,14 @@ def main( params ):
     intents = res['intents']
 
     # translate back to original language if needed
-    if language != 'en':
-        message = translator.translate( message, source='en', target=language )['translations'][0]['translation']
+    if language != BASE_LANGUAGE:
+        res = translator.translate(
+            message,
+            source=BASE_LANGUAGE,
+            target=language,
+            headers=LT_HEADERS
+        )
+        message = res['translations'][0]['translation']
         output['text'][0] = message
 
     return {
