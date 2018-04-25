@@ -1,14 +1,16 @@
 # multilingual-chatbot
-**Think 2018 Lab Session:**
+***Based on a Think 2018 lab session:***
 
 Watson Assistant + Watson Language Translator to create a multilingual chatbot
+
+**Demo:** https://multilingual-chatbot-demo.mybluemix.net/
 
 ## Setup
 
 Verify that your system satisfies the dependencies below:
-- [Docker][https://docs.docker.com/install/]
-- [Miniconda][https://conda.io/miniconda.html]
-- [IBM Cloud CLI][https://console.bluemix.net/docs/cli/reference/bluemix_cli/get_started.html#getting-started]
+- [Docker](https://docs.docker.com/install/)
+- [Miniconda](https://conda.io/miniconda.html)
+- [IBM Cloud CLI](https://console.bluemix.net/docs/cli/reference/bluemix_cli/get_started.html#getting-started)
 
 Make sure the Cloud Functions plug-in is installed
 ```
