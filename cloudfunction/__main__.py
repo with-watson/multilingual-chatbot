@@ -17,7 +17,24 @@ BASE_LANGUAGE = 'en'
 LT_HEADERS = {
     'X-Watson-Technology-Preview': '2017-07-01'
 }
-LT_THRESH = 0.5
+LT_THRESH = 0.4
+LT_PAIRS = {
+    'ar': 'Arabic',
+    'zh': 'Chinese (Simplified)',
+    'zht': 'Chinese (Traditional)',
+    'nl': 'Dutch',
+    'en': 'English',
+    'fr': 'French',
+    'de': 'German',
+    'it': 'Italian',
+    'ja': 'Japanese',
+    'ko': 'Korean',
+    'pl': 'Polish',
+    'pt': 'Portuguese (Brazil)',
+    'ru': 'Russian',
+    'es': 'Spanish',
+    'tr': 'Turkish'
+}
 
 
 def main( params ):
@@ -26,7 +43,11 @@ def main( params ):
         workspace = params['conversation_workspace_id']
     except:
         return {
-            'message': 'Please bind your conversation workspace ID as parameter'
+            'message': 'Please bind your conversation workspace ID as parameter',
+            'context': '{}',
+            'output': '{}',
+            'intents': '{}',
+            'language': ''
         }
 
     # set up conversation
@@ -39,7 +60,11 @@ def main( params ):
         )
     except:
         return {
-            'message': 'Please bind your conversation service'
+            'message': 'Please bind your conversation service',
+            'context': '{}',
+            'output': '{}',
+            'intents': '{}',
+            'language': ''
         }
 
     # set up translator
@@ -51,7 +76,11 @@ def main( params ):
         )
     except:
         return {
-            'message': 'Please bind your language translator service'
+            'message': 'Please bind your language translator service',
+            'context': '{}',
+            'output': '{}',
+            'intents': '{}',
+            'language': ''
         }
 
     # check for empty or null string
@@ -64,7 +93,7 @@ def main( params ):
     try:
         context = json.loads( params['context'] )
     except:
-        context = None
+        context = {}
 
     # detect language
     if text:
@@ -75,6 +104,18 @@ def main( params ):
         language = res['languages'][0]['language']
     else:
         language = BASE_LANGUAGE
+
+    # validate support for language
+    if language not in LT_PAIRS.keys():
+        return {
+            'message': 'Sorry, I do not know how to translate between {} and {} yet.'.format(
+                BASE_LANGUAGE, language
+            ),
+            'context': json.dumps( context ),
+            'output': '{}',
+            'intents': '{}',
+            'language': language
+        }
 
     # translate to base language if needed
     if language != BASE_LANGUAGE:
