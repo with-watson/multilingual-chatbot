@@ -102,8 +102,16 @@ def main( params ):
         res = None
     if res and res['languages'][0]['confidence'] > LT_THRESH:
         language = res['languages'][0]['language']
-    else:
+    elif res is None:
         language = BASE_LANGUAGE
+    else:
+        return {
+            'message': 'Sorry, I am not able to detect the language you are speaking. Please try rephrasing.',
+            'context': json.dumps( context ),
+            'output': '{}',
+            'intents': '{}',
+            'language': ''
+        }
 
     # validate support for language
     if language not in LT_PAIRS.keys():
@@ -138,19 +146,22 @@ def main( params ):
     )
     newContext = res['context']
     output = res['output']
-    message = res['output']['text'][0]
+    output_text = [text for text in res['output']['text'] if text]
+    message = output_text[0]
+    output['text'] = output_text
     intents = res['intents']
 
     # translate back to original language if needed
     if language != BASE_LANGUAGE:
         res = translator.translate(
-            message,
+            output_text,
             source=BASE_LANGUAGE,
             target=language,
             headers=LT_HEADERS
         )
-        message = res['translations'][0]['translation']
-        output['text'][0] = message
+        output_text = [t['translation'] for t in res['translations']]
+        message = output_text[0]
+        output['text'] = output_text
 
     return {
         'message': message,
