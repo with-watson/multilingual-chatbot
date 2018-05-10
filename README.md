@@ -5,6 +5,10 @@ Watson Assistant + Watson Language Translator to create a multilingual chatbot
 
 **Demo:** https://multilingual-chatbot-demo.mybluemix.net/
 
+### Watch the Demo Video
+[![Watch The YouTube video](https://cdn-images-1.medium.com/max/1600/1*pebwtsc3hElCrzv4MuUiHQ.png)](https://www.youtube.com/watch?v=d7DXydORTME&amp;feature=youtu.be)
+
+
 ## Setup
 
 Verify that your system satisfies the dependencies below:
