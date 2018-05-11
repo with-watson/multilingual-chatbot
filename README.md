@@ -3,12 +3,11 @@
 
 Watson Assistant + Watson Language Translator to create a multilingual chatbot
 
-<img src="https://cdn-images-1.medium.com/max/1600/1*pebwtsc3hElCrzv4MuUiHQ.png" height="400px">
-
 [**Try the live demo**](https://multilingual-chatbot-demo.mybluemix.net/)
 
 [**Watch the demo video**](https://www.youtube.com/watch?v=d7DXydORTME&amp;feature=youtu.be)
 
+[<img src="https://cdn-images-1.medium.com/max/1600/1*pebwtsc3hElCrzv4MuUiHQ.png" height="400px">](https://www.youtube.com/watch?v=d7DXydORTME&amp;feature=youtu.be)
 
 ## Setup
 
