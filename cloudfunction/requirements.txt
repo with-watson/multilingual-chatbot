@@ -1,1 +1,1 @@
-watson-developer-cloud==1.3.2
+watson-developer-cloud==1.4.0
