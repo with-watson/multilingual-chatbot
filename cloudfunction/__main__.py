@@ -9,14 +9,11 @@
 #
 import sys
 import json
-from watson_developer_cloud import ConversationV1, LanguageTranslatorV2
+from watson_developer_cloud import ConversationV1, LanguageTranslatorV3
 import time
 
 # consts
 BASE_LANGUAGE = 'en'
-LT_HEADERS = {
-    'X-Watson-Technology-Preview': '2017-07-01'
-}
 LT_THRESH = 0.4
 LT_PAIRS = {
     'ar': 'Arabic',
@@ -70,7 +67,7 @@ def main( params ):
     # set up translator
     try:
         ltCreds = params['__bx_creds']['language_translator']
-        translator = LanguageTranslatorV2(
+        translator = LanguageTranslatorV3(
             username=ltCreds['username'],
             password=ltCreds['password']
         )
@@ -97,7 +94,7 @@ def main( params ):
 
     # detect language
     if text:
-        res = translator.identify( text, headers=LT_HEADERS )
+        res = translator.identify( text )
     else:
         res = None
     if res and res['languages'][0]['confidence'] > LT_THRESH:
@@ -130,8 +127,7 @@ def main( params ):
         res = translator.translate(
             text,
             source=language,
-            target=BASE_LANGUAGE,
-            headers=LT_HEADERS
+            target=BASE_LANGUAGE
         )
         text = res['translations'][0]['translation']
 
@@ -156,8 +152,7 @@ def main( params ):
         res = translator.translate(
             output_text,
             source=BASE_LANGUAGE,
-            target=language,
-            headers=LT_HEADERS
+            target=language
         )
         output_text = [t['translation'] for t in res['translations']]
         message = output_text[0]
