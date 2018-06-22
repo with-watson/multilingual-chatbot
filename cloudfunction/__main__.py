@@ -68,6 +68,7 @@ def main( params ):
     try:
         ltCreds = params['__bx_creds']['language_translator']
         translator = LanguageTranslatorV3(
+            version='2018-05-01',
             username=ltCreds['username'],
             password=ltCreds['password']
         )
