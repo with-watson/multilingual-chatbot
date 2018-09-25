@@ -19,17 +19,23 @@ LT_PAIRS = {
     'ar': 'Arabic',
     'zh': 'Chinese (Simplified)',
     'zht': 'Chinese (Traditional)',
+    'cz': 'Czech',
+    'da': 'Danish',
     'nl': 'Dutch',
     'en': 'English',
+    'fi': 'Finnish',
     'fr': 'French',
     'de': 'German',
+    'hi': 'Hindi',
     'it': 'Italian',
     'ja': 'Japanese',
     'ko': 'Korean',
+    'nb': 'Norwegian Bokmal',
     'pl': 'Polish',
     'pt': 'Portuguese (Brazil)',
     'ru': 'Russian',
     'es': 'Spanish',
+    'sv': 'Swedish',
     'tr': 'Turkish'
 }
 
