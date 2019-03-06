@@ -26,6 +26,6 @@ dependencies:
   - requests==2.18.4
   - six==1.11.0
   - urllib3==1.22
-  - watson-developer-cloud==1.4.0
+  - watson-developer-cloud==2.8.0
 prefix: /Users/devin/miniconda3/envs/watson
 

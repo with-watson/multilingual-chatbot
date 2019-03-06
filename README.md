@@ -49,11 +49,12 @@ Provision an instance of Watson Assistant under the **Lite** plan.
 
 Click **Launch Tool**.
 
-Create an instance by clicking on **Edit Sample** of the Car Dashboard workspace.
+Create a new skill by clicking on **Create a Skill** > **Create new** > **Import skill** >
+and upload `car_workspace.json` with the option **Everything**.
 
-Make a note of `<conversation-workspace-id>`.
-This can be found under **Deployment > Credentials** of the individual workspace editor
-or by clicking on **View Details** from the home **Workspaces** page of the tool.
+Make a note of `<assistant-workspace-id>`.
+This can be found from the **Skills** page of the tool, by clicking the three dots,
+then **View API Details**.
 
 Once Watson has finished training, you may test out interacting with the assistant
 by clicking on **Try it** on the right side of the page.
@@ -84,7 +85,7 @@ Run the deployment script to package and update your cloud function
 
 Bind the conversation workspace ID (from above) as a default parameter
 ```
-bx wsk action update translator --param conversation_workspace_id <conversation-workspace-id>
+bx wsk action update translator --param assistant_workspace_id <assistant-workspace-id>
 ```
 
 Check name of your Watson service instances
@@ -94,13 +95,13 @@ bx service list
 
 You should see output that looks something like this:
 ```
-<conversation-instance-name>    conversation    free
+<assistant-instance-name>    conversation    free
 <translator-instance-name>    language_translator    free
 ```
 
 Attach these services to your cloud function
 ```
-bx wsk service bind conversation translator --instance <conversation-instance-name>
+bx wsk service bind conversation translator --instance <assistant-instance-name>
 bx wsk service bind language_translator translator --instance <translator-instance-name>
 ```
 

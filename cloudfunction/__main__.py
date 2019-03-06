@@ -7,10 +7,8 @@
 # @return The output of this action, which must be a JSON object.
 #
 #
-import sys
 import json
-from watson_developer_cloud import ConversationV1, LanguageTranslatorV3
-import time
+from watson_developer_cloud import AssistantV1, LanguageTranslatorV3
 
 # consts
 BASE_LANGUAGE = 'en'
@@ -43,10 +41,10 @@ LT_PAIRS = {
 def main( params ):
     # get conversation workspace id
     try:
-        workspace = params['conversation_workspace_id']
+        workspace = params['assistant_workspace_id']
     except:
         return {
-            'message': 'Please bind your conversation workspace ID as parameter',
+            'message': 'Please bind your assistant workspace ID as parameter',
             'context': '{}',
             'output': '{}',
             'intents': '{}',
@@ -55,15 +53,15 @@ def main( params ):
 
     # set up conversation
     try:
-        convCreds = params['__bx_creds']['conversation']
-        conversation = ConversationV1(
-            username=convCreds['username'],
-            password=convCreds['password'],
-            version='2018-02-16'
+        assistant_creds = params['__bx_creds']['conversation']
+        assistant = AssistantV1(
+            username=assistant_creds['username'],
+            password=assistant_creds['password'],
+            version='2019-03-06'
         )
     except:
         return {
-            'message': 'Please bind your conversation service',
+            'message': 'Please bind your assistant service',
             'context': '{}',
             'output': '{}',
             'intents': '{}',
@@ -72,11 +70,11 @@ def main( params ):
 
     # set up translator
     try:
-        ltCreds = params['__bx_creds']['language_translator']
+        lt_creds = params['__bx_creds']['language_translator']
         translator = LanguageTranslatorV3(
             version='2018-05-01',
-            username=ltCreds['username'],
-            password=ltCreds['password']
+            username=lt_creds['username'],
+            password=lt_creds['password']
         )
     except:
         return {
@@ -101,7 +99,8 @@ def main( params ):
 
     # detect language
     if text:
-        res = translator.identify( text )
+        response = translator.identify( text )
+        res = response.get_result()
     else:
         res = None
     if res and res['languages'][0]['confidence'] > LT_THRESH:
@@ -131,23 +130,25 @@ def main( params ):
 
     # translate to base language if needed
     if language != BASE_LANGUAGE:
-        res = translator.translate(
+        response = translator.translate(
             text,
             source=language,
             target=BASE_LANGUAGE
         )
+        res = response.get_result()
         text = res['translations'][0]['translation']
 
     # supply language as entity
     text += ' (@language:{})'.format( language )
 
     # hit conversation
-    res = conversation.message(
+    response = assistant.message(
         workspace_id=workspace,
         input={'text': text},
         context=context
     )
-    newContext = res['context']
+    res = response.get_result()
+    new_context = res['context']
     output = res['output']
     output_text = [text for text in res['output']['text'] if text]
     message = output_text[0]
@@ -156,18 +157,19 @@ def main( params ):
 
     # translate back to original language if needed
     if language != BASE_LANGUAGE:
-        res = translator.translate(
+        response = translator.translate(
             output_text,
             source=BASE_LANGUAGE,
             target=language
         )
+        res = response.get_result()
         output_text = [t['translation'] for t in res['translations']]
         message = output_text[0]
         output['text'] = output_text
 
     return {
         'message': message,
-        'context': json.dumps( newContext ),
+        'context': json.dumps( new_context ),
         'output': json.dumps( output ),
         'intents': json.dumps( intents ),
         'language': language
