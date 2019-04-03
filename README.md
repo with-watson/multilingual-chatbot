@@ -43,7 +43,7 @@ Provision an instance of Language Translator under the **Lite** plan.
 Create a set of credentials by clicking **Service credentials** > **New credential** > **Add**.
 
 Grab the value for `apikey` of the newly created IAM credential.
-Store this in the file `etc/config.json` under `"translator_apikey"`.
+Store this in the file `etc/params.json` under `"translator_apikey"`.
 
 #### Watson Assistant
 From the dashboard, click on **Create resource** and search for **Watson Assistant**.
@@ -53,7 +53,7 @@ Provision an instance of Watson Assistant under the **Lite** plan.
 Create a set of credentials by clicking **Service credentials** > **New credential** > **Add**.
 
 Grab the value for `apikey` of the newly created IAM credential.
-Store this in the file `etc/config.json` under `"assistant_apikey"`.
+Store this in the file `etc/params.json` under `"assistant_apikey"`.
 
 Click **Launch Tool**.
 
@@ -63,7 +63,7 @@ with the option **Everything**.
 
 From the **Skills** page of the tool, click the three dots,
 then **View API Details** to get the **Workspace ID**.
-Store this in the file `etc/config.json` under `"assistant_workspace_id"`.
+Store this in the file `etc/params.json` under `"assistant_workspace_id"`.
 
 Once Watson has finished training, you may test out interacting with the assistant
 by clicking on **Try it** on the right side of the page.
