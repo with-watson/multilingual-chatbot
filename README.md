@@ -42,19 +42,28 @@ Provision an instance of Language Translator under the **Lite** plan.
 
 Create a set of credentials by clicking **Service credentials** > **New credential** > **Add**.
 
+Grab the value for `apikey` of the newly created IAM credential.
+Store this in the file `etc/config.json` under `"translator_apikey"`.
+
 #### Watson Assistant
 From the dashboard, click on **Create resource** and search for **Watson Assistant**.
 
 Provision an instance of Watson Assistant under the **Lite** plan.
 
+Create a set of credentials by clicking **Service credentials** > **New credential** > **Add**.
+
+Grab the value for `apikey` of the newly created IAM credential.
+Store this in the file `etc/config.json` under `"assistant_apikey"`.
+
 Click **Launch Tool**.
 
 Create a new skill by clicking on **Create a Skill** > **Create new** > **Import skill** >
-and upload `car_workspace.json` with the option **Everything**.
+and upload [`car_workspace.json`](https://github.com/watson-developer-cloud/car-dashboard/blob/master/training/car_workspace.json)
+with the option **Everything**.
 
-Make a note of `<assistant-workspace-id>`.
-This can be found from the **Skills** page of the tool, by clicking the three dots,
-then **View API Details**.
+From the **Skills** page of the tool, click the three dots,
+then **View API Details** to get the **Workspace ID**.
+Store this in the file `etc/config.json` under `"assistant_workspace_id"`.
 
 Once Watson has finished training, you may test out interacting with the assistant
 by clicking on **Try it** on the right side of the page.
@@ -83,29 +92,12 @@ Run the deployment script to package and update your cloud function
 
 #### Binding your Watson services
 
-Bind the conversation workspace ID (from above) as a default parameter
+Bind the parameters you have defined to the deployed cloud function
 ```
-bx wsk action update translator --param assistant_workspace_id <assistant-workspace-id>
-```
-
-Check name of your Watson service instances
-```
-bx service list
+bx wsk action update translator --param-file etc/params.json
 ```
 
-You should see output that looks something like this:
-```
-<assistant-instance-name>    conversation    free
-<translator-instance-name>    language_translator    free
-```
-
-Attach these services to your cloud function
-```
-bx wsk service bind conversation translator --instance <assistant-instance-name>
-bx wsk service bind language_translator translator --instance <translator-instance-name>
-```
-
-Verify that these services are available as parameters to your cloud function
+Verify that these values are available as parameters to your cloud function
 ```
 bx wsk action get translator parameters
 ```
@@ -117,7 +109,7 @@ bx wsk action invoke translator --result --param text "hi there"
 bx wsk action invoke translator --result --param text "hola amigo"
 ```
 
-## Run a full conversation
+## 3. Run a full conversation
 
 Get the namespace for your deployed cloud function
 ```
@@ -129,7 +121,7 @@ Run the program. Experiment with switching between languages mid-conversation
 python main.py --namespace <namespace>
 ```
 
-## Integrate with an existing application
+## 4. Integrate with an existing application
 
 Make a standard HTTP POST request to interact with the cloud function from any application
 ```

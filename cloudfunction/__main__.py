@@ -53,10 +53,8 @@ def main( params ):
 
     # set up conversation
     try:
-        assistant_creds = params['__bx_creds']['conversation']
         assistant = AssistantV1(
-            username=assistant_creds['username'],
-            password=assistant_creds['password'],
+            iam_apikey=params['assistant_apikey'],
             version='2019-03-06'
         )
     except:
@@ -70,11 +68,9 @@ def main( params ):
 
     # set up translator
     try:
-        lt_creds = params['__bx_creds']['language_translator']
         translator = LanguageTranslatorV3(
-            version='2018-05-01',
-            username=lt_creds['username'],
-            password=lt_creds['password']
+            version='2019-04-03',
+            iam_apikey=params['translator_apikey']
         )
     except:
         return {
